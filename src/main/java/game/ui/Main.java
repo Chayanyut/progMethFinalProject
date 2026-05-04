@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * JavaFX entry point: loads {@code layout.fxml} and shows the primary stage.
+ * JavaFX entry point: loads {@code start_menu.fxml} and shows the primary stage.
  */
 public class Main extends Application {
 
@@ -20,7 +20,7 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Tycoon Game");
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/layout.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/start_menu.fxml")));
         Parent root = loader.load();
         primaryStage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
         primaryStage.show();

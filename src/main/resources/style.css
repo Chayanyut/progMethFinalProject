@@ -1,0 +1,18 @@
+.root { -fx-font-family: "Segoe UI", Helvetica, sans-serif; }
+.button {
+    -fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;
+    -fx-background-radius: 5; -fx-padding: 8 16 8 16; -fx-cursor: hand;
+}
+.button:hover { -fx-background-color: #3498db; }
+.tab-pane .tab-header-area .tab-header-background { -fx-background-color: #1e1e1e; }
+.tab-pane .tab { -fx-background-color: #2b2b2b; -fx-background-radius: 5 5 0 0; }
+.tab-pane .tab:selected { -fx-background-color: #34495e; }
+.tab-pane .tab .tab-label { -fx-text-fill: #ecf0f1; -fx-font-weight: bold; }
+.tab-pane .tab-content-area { -fx-background-color: #34495e; -fx-padding: 15; }
+.inventory-slot {
+    -fx-background-color: #34495e; -fx-border-color: #2c3e50; -fx-border-width: 2;
+    -fx-background-radius: 5; -fx-border-radius: 5; -fx-cursor: hand; -fx-padding: 5;
+}
+.inventory-slot-active { -fx-border-color: #f1c40f; } /* Gold border for equipped */
+.inventory-slot-empty { -fx-opacity: 0.5; }
+

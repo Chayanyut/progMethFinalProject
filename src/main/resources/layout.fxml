@@ -1,60 +1,122 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.control.ScrollPane?>
 
 <StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="game.ui.GameController">
-    <BorderPane>
+           fx:controller="game.ui.GameController"
+           stylesheets="@style.css">
+
+    <!-- LAYER 1: The Game World (Completely separated from the UI) -->
+    <Pane style="-fx-background-color: #111111;">
+        <Canvas fx:id="gameCanvas" width="2000.0" height="2000.0"/>
+    </Pane>
+
+    <!-- LAYER 2: The HUD (pickOnBounds="false" lets your mouse click 'through' the empty middle area) -->
+    <BorderPane pickOnBounds="false">
         <top>
             <HBox alignment="CENTER_LEFT" spacing="12.0"
                   style="-fx-background-color: #1a1a1a; -fx-padding: 10 14 10 14;">
                 <children>
-                    <Button mnemonicParsing="false" text="Toggle Shop" onAction="#toggleShop"
-                            style="-fx-background-color: #333; -fx-text-fill: white;"/>
-                    <Region HBox.hgrow="ALWAYS"/>
                     <Label fx:id="moneyLabel" text="Balance: $500"
                            style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
                 </children>
             </HBox>
         </top>
-        <center>
-            <Pane>
-                <Canvas fx:id="gameCanvas" width="2000.0" height="2000.0"/>
-            </Pane>
-        </center>
+        <bottom>
+            <BorderPane style="-fx-background-color: rgba(0,0,0,0.35); -fx-padding: 8 12 8 12;">
+                <center>
+                    <ScrollPane vbarPolicy="NEVER" hbarPolicy="AS_NEEDED"
+                                fitToHeight="true"
+                                style="-fx-background-color: transparent; -fx-background: transparent;">
+                        <content>
+                            <HBox fx:id="inventoryBox" spacing="10.0"/>
+                        </content>
+                    </ScrollPane>
+                </center>
+                <right>
+                    <HBox alignment="CENTER_RIGHT" spacing="10.0" style="-fx-padding: 0 0 0 12;">
+                        <children>
+                            <Button mnemonicParsing="false" text="Open Shop (B)" onAction="#toggleShop"/>
+                        </children>
+                    </HBox>
+                </right>
+            </BorderPane>
+        </bottom>
     </BorderPane>
-    <VBox fx:id="shopPanel" alignment="TOP_CENTER" spacing="10.0" translateX="-250.0"
-          StackPane.alignment="CENTER_LEFT"
-          style="-fx-background-color: rgba(35,35,40,0.95); -fx-padding: 16; -fx-border-color: #555; -fx-border-width: 0 2 0 0;">
+
+    <!-- LAYER 3: The Shop Popup -->
+    <VBox fx:id="shopPopup" visible="false" maxWidth="600.0" maxHeight="400.0"
+          StackPane.alignment="CENTER"
+          style="-fx-background-color: #2c3e50; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-padding: 14;">
         <children>
-            <Label text="Shop" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Button mnemonicParsing="false" text="Buy Dropper ($50)" onAction="#buyDropper"
-                    maxWidth="1.7976931348623157E308"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
-            <Button mnemonicParsing="false" text="Buy Conveyor ($10)" onAction="#buyConveyor"
-                    maxWidth="1.7976931348623157E308"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
-            <Button mnemonicParsing="false" text="Buy Upgrader ($100)" onAction="#buyUpgrader"
-                    maxWidth="1.7976931348623157E308"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
-            <Button mnemonicParsing="false" text="Buy Furnace ($200)" onAction="#buyFurnace"
-                    maxWidth="1.7976931348623157E308"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <HBox alignment="CENTER_LEFT" spacing="10.0">
+                <children>
+                    <Label text="Shop" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" text="Close" onAction="#toggleShop"
+                            style="-fx-background-color: #444; -fx-text-fill: white;"/>
+                </children>
+            </HBox>
+
+            <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent;">
+                <tabs>
+                    <Tab text="Production">
+                        <content>
+                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
+                                <children>
+                                    <Button mnemonicParsing="false" text="Buy Dropper ($50)" onAction="#buyDropper"
+                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
+                                </children>
+                            </TilePane>
+                        </content>
+                    </Tab>
+                    <Tab text="Transport">
+                        <content>
+                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
+                                <children>
+                                    <Button mnemonicParsing="false" text="Buy Conveyor ($10)" onAction="#buyConveyor"
+                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
+                                </children>
+                            </TilePane>
+                        </content>
+                    </Tab>
+                    <Tab text="Upgrades">
+                        <content>
+                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
+                                <children>
+                                    <Button mnemonicParsing="false" text="Buy Upgrader ($100)" onAction="#buyUpgrader"
+                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
+                                </children>
+                            </TilePane>
+                        </content>
+                    </Tab>
+                    <Tab text="Processing">
+                        <content>
+                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
+                                <children>
+                                    <Button mnemonicParsing="false" text="Buy Furnace ($200)" onAction="#buyFurnace"
+                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
+                                </children>
+                            </TilePane>
+                        </content>
+                    </Tab>
+                </tabs>
+            </TabPane>
+
             <Label fx:id="shopHintLabel" text="Select a machine, then click the grid to place."
                    wrapText="true"
-                   style="-fx-text-fill: #ccc; -fx-font-size: 11px;"/>
+                   style="-fx-text-fill: #cfcfcf; -fx-font-size: 12px; -fx-padding: 6 2 0 2;"/>
         </children>
-        <padding>
-            <Insets top="80.0" right="12.0" bottom="12.0" left="12.0"/>
-        </padding>
     </VBox>
 </StackPane>
