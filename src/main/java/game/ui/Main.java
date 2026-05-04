@@ -1,19 +1,28 @@
 package game.ui;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+import java.util.Objects;
+
 /**
- * JavaFX entry point (minimal stub for Milestone 1).
+ * JavaFX entry point: loads {@code layout.fxml} and shows the primary stage.
  */
 public class Main extends Application {
 
+    private static final int SCENE_WIDTH = 1024;
+    private static final int SCENE_HEIGHT = 768;
+
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws IOException {
         primaryStage.setTitle("Tycoon Game");
-        primaryStage.setScene(new Scene(new StackPane(), 640, 480));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/layout.fxml")));
+        Parent root = loader.load();
+        primaryStage.setScene(new Scene(root, SCENE_WIDTH, SCENE_HEIGHT));
         primaryStage.show();
     }
 
