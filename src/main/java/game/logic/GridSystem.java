@@ -139,17 +139,8 @@ public class GridSystem {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Machine machine = cells[x][y];
-                if (machine instanceof Furnace furnace) {
-                    furnace.smeltHeldItem();
-                }
-            }
-        }
-
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
-                Machine machine = cells[x][y];
-                if (machine instanceof Dropper dropper) {
-                    dropper.spawnIfStillEmpty(!hadItemAtStart[x][y]);
+                if (machine != null) {
+                    machine.onTick(hadItemAtStart[x][y]);
                 }
             }
         }

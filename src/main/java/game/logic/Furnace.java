@@ -16,6 +16,11 @@ public class Furnace extends Machine {
     }
 
     @Override
+    public void onTick(boolean hadItemAtStart) {
+        smeltHeldItem();
+    }
+
+    @Override
     public void processItem(Item item) {
         // Smelting happens on tick when an item is held; see GridSystem.tick().
     }

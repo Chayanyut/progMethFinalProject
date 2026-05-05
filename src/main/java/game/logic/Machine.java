@@ -18,7 +18,7 @@ public abstract class Machine implements Tickable {
     }
 
     @Override
-    public void onTick() {
+    public void onTick(boolean hadItemAtStart) {
         // Simulation steps are orchestrated by GridSystem.tick().
     }
 

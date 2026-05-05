@@ -12,6 +12,11 @@ public class Dropper extends Conveyor {
         this.spawnValue = spawnValue;
     }
 
+    @Override
+    public void onTick(boolean hadItemAtStart) {
+        spawnIfStillEmpty(!hadItemAtStart);
+    }
+
     public double getSpawnValue() {
         return spawnValue;
     }
