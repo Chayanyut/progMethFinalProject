@@ -7,7 +7,7 @@ public class Item {
     private double value;
 
     public Item(double value) {
-        this.value = value;
+        setValue(value);
     }
 
     public double getValue() {

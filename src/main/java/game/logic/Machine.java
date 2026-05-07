@@ -13,8 +13,8 @@ public abstract class Machine implements Tickable {
     protected Item currentItem;
 
     protected Machine(double cost, Direction facing) {
-        this.cost = cost;
-        this.facing = facing;
+        setCost(cost);
+        setFacing(facing);
     }
 
     @Override
