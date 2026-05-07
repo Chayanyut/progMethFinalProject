@@ -4,12 +4,12 @@ package game.logic;
  * Spawns a new item when empty at the start of a tick, then behaves like a conveyor
  * so items can leave toward {@link #getFacing()}.
  */
-public class Dropper extends Conveyor {
-    private final double spawnValue;
+public class Dropper extends Conveyor { ;
+    private final ItemType itemToDrop;
 
-    public Dropper(MachineType type, double cost, Direction facing, double spawnValue) {
+    public Dropper(MachineType type, double cost, Direction facing, ItemType itemToDrop) {
         super(type, cost, facing);
-        this.spawnValue = spawnValue;
+        this.itemToDrop = itemToDrop;
     }
 
     @Override
@@ -29,6 +29,6 @@ public class Dropper extends Conveyor {
         if (getCurrentItem() != null) {
             return;
         }
-        acceptItem(new Item(spawnValue));
+        acceptItem(new Item(itemToDrop));
     }
 }

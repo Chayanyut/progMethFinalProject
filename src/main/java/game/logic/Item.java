@@ -5,22 +5,21 @@ package game.logic;
  */
 public class Item {
     private double value;
+    private final ItemType type;
 
-    public Item(double value) {
-        setValue(value);
+    public Item(ItemType type) {
+        this.type = type;
+        this.value = type.getValue();
+    }
+
+    public ItemType getType() {
+        return type;
     }
 
     public double getValue() {
         return value;
     }
 
-    public void setValue(double value) {
-        this.value = value;
-    }
-
-    /**
-     * Multiplies this item's value by the given factor (in-place).
-     */
     public void multiplyValue(double factor) {
         this.value *= factor;
     }

@@ -23,7 +23,7 @@ public enum MachineType {
     DROPPER(50, "dropper.png", MachineCategory.PRODUCTION, "Dropper") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, 10.0); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.COAL); // 10.0 drop rate
         }
     },
 
