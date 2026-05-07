@@ -13,25 +13,25 @@ class GridSystemTest {
     @Test
     void placeMachineRejectsOutOfBounds() {
         GridSystem grid = new GridSystem(3, 3);
-        assertFalse(grid.placeMachine(-1, 0, new Conveyor(1, Direction.RIGHT)));
-        assertFalse(grid.placeMachine(0, -1, new Conveyor(1, Direction.RIGHT)));
-        assertFalse(grid.placeMachine(3, 0, new Conveyor(1, Direction.RIGHT)));
-        assertFalse(grid.placeMachine(0, 3, new Conveyor(1, Direction.RIGHT)));
+        assertFalse(grid.placeMachine(-1, 0, new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT)));
+        assertFalse(grid.placeMachine(0, -1, new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT)));
+        assertFalse(grid.placeMachine(3, 0, new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT)));
+        assertFalse(grid.placeMachine(0, 3, new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT)));
     }
 
     @Test
     void placeMachineRejectsOverlap() {
         GridSystem grid = new GridSystem(2, 2);
-        assertTrue(grid.placeMachine(0, 0, new Conveyor(1, Direction.RIGHT)));
-        assertFalse(grid.placeMachine(0, 0, new Conveyor(1, Direction.DOWN)));
+        assertTrue(grid.placeMachine(0, 0, new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT)));
+        assertFalse(grid.placeMachine(0, 0, new Conveyor(MachineType.CONVEYOR, 1, Direction.DOWN)));
     }
 
     @Test
     void conveyorLineMovesAtMostOneCellPerTick() {
         GridSystem grid = new GridSystem(5, 1);
-        Dropper dropper = new Dropper(1, Direction.RIGHT, 10);
-        Conveyor c1 = new Conveyor(1, Direction.RIGHT);
-        Conveyor c2 = new Conveyor(1, Direction.RIGHT);
+        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.COAL);
+        Conveyor c1 = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
+        Conveyor c2 = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
         assertTrue(grid.placeMachine(0, 0, dropper));
         assertTrue(grid.placeMachine(1, 0, c1));
         assertTrue(grid.placeMachine(2, 0, c2));
@@ -56,9 +56,9 @@ class GridSystemTest {
     void furnaceCreditsBankAndClearsItem() {
         PlayerBank bank = new PlayerBank(0);
         GridSystem grid = new GridSystem(5, 1);
-        Dropper dropper = new Dropper(1, Direction.RIGHT, 7);
-        Conveyor conveyor = new Conveyor(1, Direction.RIGHT);
-        Furnace furnace = new Furnace(1, Direction.LEFT, bank);
+        Dropper dropper = new Dropper(MachineType.DROPPER,1, Direction.RIGHT, ItemType.COAL);
+        Conveyor conveyor = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
+        Furnace furnace = new Furnace(MachineType.DROPPER, 1, Direction.LEFT, bank);
 
         assertTrue(grid.placeMachine(0, 0, dropper));
         assertTrue(grid.placeMachine(1, 0, conveyor));
@@ -67,10 +67,10 @@ class GridSystemTest {
         grid.tick();
         grid.tick();
         assertNull(furnace.getCurrentItem());
-        assertEquals(0, bank.getBalance(), 1e-9);
+        assertEquals(0, bank.getBalance()); // Item hasn't reached furnace
 
         grid.tick();
         assertNull(furnace.getCurrentItem());
-        assertEquals(7, bank.getBalance(), 1e-9);
+        assertEquals(5, bank.getBalance()); // Item reached furnace and update bank with item's value
     }
 }
