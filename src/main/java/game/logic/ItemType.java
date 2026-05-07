@@ -1,7 +1,7 @@
 package game.logic;
 
 public enum ItemType {
-    COAL("Coal", 5.0, "coal_item.png"),
+    COAL("Coal", 5.0, "IMG_3462.png"),
     IRON("Iron Ore", 15.0, "iron_item.png"),
     GOLD("Gold Ore", 50.0, "gold_item.png");
 

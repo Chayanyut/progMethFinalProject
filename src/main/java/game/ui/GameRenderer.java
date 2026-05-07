@@ -23,16 +23,39 @@ public class GameRenderer {
     }
 
     private void preloadImages() {
-        imageCache.put("item.png", getImage("item.png", "It")); // Standard item
-
+        // 1. Your existing loop for MachineTypes...
         for (MachineType type : MachineType.values()) {
             if (type == MachineType.NONE || type.getCategory() == null) continue;
-
-            imageCache.put(
-                    type.getImageName(),
-                    getImage(type.getImageName(), type.getFallBackText())
-            );
+            if (type.getFallBackText() == null) {
+                imageCache.put(type.getImageName(), loadRequiredAsset(type.getImageName()));
+            } else {
+                imageCache.put(type.getImageName(), getImage(type.getImageName(), type.getFallBackText()));
+            }
         }
+
+        // 2. NEW: Dynamically preload every ItemType!
+        for (ItemType item : ItemType.values()) {
+            // Create a smart 2-letter fallback text (e.g., "COAL" -> "Co")
+            String fallback = item.name().substring(0, Math.min(2, item.name().length()));
+            fallback = fallback.substring(0, 1).toUpperCase() + fallback.substring(1).toLowerCase();
+
+            // Add it to the cache using your existing graceful degradation method
+            imageCache.put(item.getImageName(), getImage(item.getImageName(), fallback));
+        }
+    }
+
+    private Image loadRequiredAsset(String fileName) {
+        String path = "/images/" + fileName;
+        InputStream stream = GameRenderer.class.getResourceAsStream(path);
+
+        // If the stream is null, the file literally does not exist in the resources folder
+        if (stream == null) {
+            System.err.println("CRITICAL FAILURE: Missing required asset: " + path);
+            System.err.println("Did you forget to put " + fileName + " in the resources/images folder?");
+            System.exit(1); // Force the game to safely shut down
+        }
+
+        return new Image(stream);
     }
 
     private Image getImage(String filename, String fallbackText) {
@@ -99,7 +122,6 @@ public class GameRenderer {
         for (int gy = 0; gy <= logicGrid.getHeight(); gy++) gc.strokeLine(0, gy * TILE_SIZE, worldW, gy * TILE_SIZE);
 
         // Draw Machines and Items
-        Image itemImg = imageCache.get("item.png");
         for (int x = 0; x < logicGrid.getWidth(); x++) {
             for (int y = 0; y < logicGrid.getHeight(); y++) {
                 Machine m = logicGrid.getMachine(x, y);
@@ -108,10 +130,17 @@ public class GameRenderer {
                 double px = x * TILE_SIZE, py = y * TILE_SIZE;
                 drawImageRotated(gc, imageForMachineType(m.getType()), px, py, TILE_SIZE, TILE_SIZE, facingAngle(m.getFacing()));
 
+                // --- REPLACE THIS IF STATEMENT ---
                 if (m.getCurrentItem() != null) {
                     double inset = TILE_SIZE * 0.2;
-                    drawImageRotated(gc, itemImg, px + inset * 0.5, py + inset * 0.5, TILE_SIZE - inset, TILE_SIZE - inset, 0);
+
+                    // NEW: Dynamically fetch the specific item's image!
+                    String exactImageName = m.getCurrentItem().getType().getImageName();
+                    Image exactItemImg = imageCache.get(exactImageName);
+
+                    drawImageRotated(gc, exactItemImg, px + inset * 0.5, py + inset * 0.5, TILE_SIZE - inset, TILE_SIZE - inset, 0);
                 }
+                // ---------------------------------
             }
         }
 
