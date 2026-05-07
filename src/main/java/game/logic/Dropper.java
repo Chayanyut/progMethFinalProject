@@ -17,10 +17,6 @@ public class Dropper extends Conveyor {
         spawnIfStillEmpty(!hadItemAtStart);
     }
 
-    public double getSpawnValue() {
-        return spawnValue;
-    }
-
     @Override
     public void processItem(Item item) {
         // No transformation on intake (normally not fed by belts).

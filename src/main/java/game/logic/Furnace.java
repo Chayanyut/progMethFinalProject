@@ -11,10 +11,6 @@ public class Furnace extends Machine {
         this.bank = bank;
     }
 
-    public PlayerBank getBank() {
-        return bank;
-    }
-
     @Override
     public void onTick(boolean hadItemAtStart) {
         smeltHeldItem();
