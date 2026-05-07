@@ -4,7 +4,6 @@ import game.logic.*;
 import javafx.animation.AnimationTimer;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
@@ -195,32 +194,6 @@ public class GameController implements Initializable {
         }, intervalMs, intervalMs, TimeUnit.MILLISECONDS);
     }
 
-    private void handleCanvasClick(MouseEvent event) {
-        if (shopPopup != null && shopPopup.isVisible()) return;
-
-        MachineType selection = shopManager.getActiveSelection();
-        if (selection == MachineType.NONE) return;
-
-        if (shopManager.getInventoryCount(selection) <= 0) {
-            shopManager.refreshUI();
-            return;
-        }
-
-        Point2D local = gameCanvas.sceneToLocal(event.getSceneX(), event.getSceneY());
-        double worldX = camera.screenToWorldX(local.getX());
-        double worldY = camera.screenToWorldY(local.getY());
-        int gx = (int) Math.floor(worldX / TILE_SIZE);
-        int gy = (int) Math.floor(worldY / TILE_SIZE);
-
-        if (!logicGrid.isInside(gx, gy)) return;
-
-        Machine toPlace = createMachine(selection);
-        if (logicGrid.placeMachine(gx, gy, toPlace)) {
-            shopManager.consumeFromInventory(selection);
-        }
-    }
-
-
     private Machine createMachine(MachineType s) {
         Direction face = placementFacing;
         return switch (s) {
@@ -273,10 +246,28 @@ public class GameController implements Initializable {
         };
     }
 
+    private void handleCanvasClick(MouseEvent event) {
+        if (shopPopup != null && shopPopup.isVisible()) return;
+        MachineType selection = shopManager.getActiveSelection();
+        if (selection == MachineType.NONE) return;
+        if (shopManager.getInventoryCount(selection) <= 0) {
+            shopManager.refreshUI();
+            return;
+        }
+
+        int gx = (int) Math.floor(event.getX() / TILE_SIZE);
+        int gy = (int) Math.floor(event.getY() / TILE_SIZE);
+
+        if (!logicGrid.isInside(gx, gy)) return;
+        Machine toPlace = createMachine(selection);
+        if (logicGrid.placeMachine(gx, gy, toPlace)) {
+            shopManager.consumeFromInventory(selection);
+        }
+    }
+
     private void handleCanvasMouseMove(MouseEvent event) {
         if (shopPopup != null && shopPopup.isVisible()) return;
-        Point2D local = gameCanvas.sceneToLocal(event.getSceneX(), event.getSceneY());
-        mouseWorldX = camera.screenToWorldX(local.getX());
-        mouseWorldY = camera.screenToWorldY(local.getY());
+        mouseWorldX = event.getX();
+        mouseWorldY = event.getY();
     }
 }

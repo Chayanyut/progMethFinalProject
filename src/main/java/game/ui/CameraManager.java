@@ -36,8 +36,4 @@ public class CameraManager {
                 new Translate(x, y)
         );
     }
-
-    // Translates Mouse coordinates to Grid World coordinates
-    public double screenToWorldX(double localX) { return (localX - x) / zoom; }
-    public double screenToWorldY(double localY) { return (localY - y) / zoom; }
 }
