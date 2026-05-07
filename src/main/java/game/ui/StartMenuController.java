@@ -31,18 +31,21 @@ public class StartMenuController implements Initializable {
                     backgroundImageView.setImage(img);
                 }
             }
-        } catch (Exception ignored) {
-            // If missing or invalid, we keep the dark background from FXML.
+        } catch (Exception e) {
+            System.err.println("Warning: Could not load start menu background: " + e.getMessage());
         }
     }
 
     @FXML
     void startGame(ActionEvent event) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/layout.fxml")));
-        Scene newScene = new Scene(root, 1024, 768);
 
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        double width = stage.getWidth() > 0 ? stage.getWidth() : Main.SCENE_WIDTH;
+        double height = stage.getHeight() > 0 ? stage.getHeight() : Main.SCENE_HEIGHT;
+
+        Scene newScene = new Scene(root, width, height);
         stage.setScene(newScene);
     }
 }
-
