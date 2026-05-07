@@ -43,15 +43,6 @@ public class GridSystem {
         return cells[x][y];
     }
 
-    public Machine getNeighbor(Machine machine, Direction direction) {
-        if (machine == null) {
-            return null;
-        }
-        int nx = machine.getGridX() + direction.deltaX();
-        int ny = machine.getGridY() + direction.deltaY();
-        return getMachine(nx, ny);
-    }
-
     /**
      * @return false if out of bounds or cell already occupied
      */
