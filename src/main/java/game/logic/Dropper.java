@@ -7,8 +7,8 @@ package game.logic;
 public class Dropper extends Conveyor {
     private final double spawnValue;
 
-    public Dropper(double cost, Direction facing, double spawnValue) {
-        super(cost, facing);
+    public Dropper(MachineType type, double cost, Direction facing, double spawnValue) {
+        super(type, cost, facing);
         this.spawnValue = spawnValue;
     }
 
@@ -31,7 +31,4 @@ public class Dropper extends Conveyor {
         }
         acceptItem(new Item(spawnValue));
     }
-
-    @Override
-    public MachineType getType() { return MachineType.DROPPER; }
 }

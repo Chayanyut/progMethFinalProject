@@ -8,13 +8,15 @@ import java.util.Optional;
 public abstract class Machine implements Tickable {
     private int gridX;
     private int gridY;
+    private final MachineType type;
     private double cost;
     private Direction facing;
     protected Item currentItem;
 
-    protected Machine(double cost, Direction facing) {
+    protected Machine(MachineType type, double cost, Direction facing) {
         setCost(cost);
         setFacing(facing);
+        this.type = type;
     }
 
     @Override
@@ -59,7 +61,9 @@ public abstract class Machine implements Tickable {
         this.currentItem = currentItem;
     }
 
-    public abstract MachineType getType();
+    public MachineType getType() {
+        return type;
+    }
 
     /**
      * Invoked after an item is accepted into {@link #currentItem}.

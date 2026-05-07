@@ -15,7 +15,7 @@ public enum MachineType {
     CONVEYOR(10, "conveyor.png", MachineCategory.TRANSPORT, "Conveyor") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Conveyor(getCost(), face);
+            return new Conveyor(this, getCost(), face);
         }
     },
 
@@ -23,7 +23,7 @@ public enum MachineType {
     DROPPER(50, "dropper.png", MachineCategory.PRODUCTION, "Dropper") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(getCost(), face, 10.0); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, 10.0); // 10.0 drop rate
         }
     },
 
@@ -31,13 +31,13 @@ public enum MachineType {
     UPGRADER(100, "upgrader.png", MachineCategory.UPGRADES, "Upgrades") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(getCost(), face, 2.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 2.0); // 2.0 upgrade multiplier
         }
     },
-    TEST(19, "tdsggdsgsdgdsg.png", MachineCategory.UPGRADES, "TEST") {
+    TEST(19, "IMG_3439.png", MachineCategory.UPGRADES, "TEST") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(getCost(), face, 1231);
+            return new Upgrader(this, getCost(), face, 1231);
         }
     },
 
@@ -45,7 +45,7 @@ public enum MachineType {
     FURNACE(200, "furnace.png", MachineCategory.PROCESSING, "Furnace") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Furnace(getCost(), face, bank); // Furnace needs the bank
+            return new Furnace(this, getCost(), face, bank); // Furnace needs the bank
         }
     };
 

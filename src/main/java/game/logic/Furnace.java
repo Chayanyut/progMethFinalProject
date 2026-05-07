@@ -6,8 +6,8 @@ package game.logic;
 public class Furnace extends Machine {
     private final PlayerBank bank;
 
-    public Furnace(double cost, Direction facing, PlayerBank bank) {
-        super(cost, facing);
+    public Furnace(MachineType type, double cost, Direction facing, PlayerBank bank) {
+        super(type, cost, facing);
         this.bank = bank;
     }
 
@@ -29,7 +29,4 @@ public class Furnace extends Machine {
         bank.deposit(item.getValue());
         clearCurrentItem();
     }
-
-    @Override
-    public MachineType getType() { return MachineType.FURNACE; }
 }

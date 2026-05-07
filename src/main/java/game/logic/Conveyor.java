@@ -7,8 +7,8 @@ import java.util.Optional;
  */
 public class Conveyor extends Machine {
 
-    public Conveyor(double cost, Direction facing) {
-        super(cost, facing);
+    public Conveyor(MachineType type, double cost, Direction facing) {
+        super(type, cost, facing);
     }
 
     @Override
@@ -39,7 +39,4 @@ public class Conveyor extends Machine {
         }
         return Optional.of(new OutgoingTransfer(getGridX(), getGridY(), nx, ny, outgoing));
     }
-
-    @Override
-    public MachineType getType() { return MachineType.CONVEYOR; }
 }
