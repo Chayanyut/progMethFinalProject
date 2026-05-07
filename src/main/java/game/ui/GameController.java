@@ -43,62 +43,77 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameController implements Initializable {
 
+    // ==========================================
+    // Constants & Configuration
+    // ==========================================
     private static final double TILE_SIZE = 50.0;
     private static final double LOGIC_INTERVAL_SEC = 0.5;
     private static final double PAN_SPEED_PX_PER_SEC = 280.0;
 
-    private ShopManager shopManager;
+    // ==========================================
+    // FXML UI Components
+    // ==========================================
+    @FXML private Canvas gameCanvas;
+    @FXML private VBox shopPopup;
+    @FXML private HBox inventoryBox;
+    @FXML private Label moneyLabel;
+    @FXML private Label shopHintLabel;
 
-    @FXML
-    private Canvas gameCanvas;
-    @FXML
-    private VBox shopPopup;
-    @FXML
-    private Label moneyLabel;
-    @FXML
-    private Label shopHintLabel;
-    @FXML
-    private HBox inventoryBox;
-
+    // ==========================================
+    // Core Game Systems & Managers
+    // ==========================================
     private final GridSystem logicGrid = new GridSystem(20, 20);
-
     private final PlayerBank bank = new PlayerBank(500.0);
-
     private final GameRenderer renderer = new GameRenderer();
-
     private final CameraManager camera = new CameraManager();
+    private ShopManager shopManager; // Initialized in initialize()
 
+    // ==========================================
+    // User Input & Interaction State
+    // ==========================================
     private final Set<KeyCode> activeKeys = ConcurrentHashMap.newKeySet();
-
     private Direction placementFacing = Direction.RIGHT;
-
     private double mouseWorldX;
     private double mouseWorldY;
 
+    // ==========================================
+    // Game Loop & Timing
+    // ==========================================
     private AnimationTimer gameLoop;
     private long lastFrameNanos;
     private long lastLogicTickNanos;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        preloadImages();
-
-        // Initialize the new Shop Manager
+        // 1. Initialize the new Shop Manager
         shopManager = new ShopManager(
                 bank,
                 inventoryBox,
                 moneyLabel,
-                this::imageForMachineType, // We will rename imageForSelection to this
-                this::updateShopHint       // Tells the hint label to update when inventory changes
+                renderer::imageForMachineType, // Tell ShopManager to ask the Renderer for images
+                this::updateShopHint           // Callback to update hint text when inventory changes
         );
+
         shopManager.refreshUI();
 
+        // 2. Attach Canvas Mouse Handlers (Required for placing and holograms)
         gameCanvas.setOnMouseClicked(this::handleCanvasClick);
         gameCanvas.setOnMouseMoved(this::handleCanvasMouseMove);
 
-        // ... (Keep the sceneProperty listener exactly the same) ...
-
-        updateShopHint();
+        // 3. Listen for scene changes to hook up keyboard/scroll events and start the loop
+        gameCanvas.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (oldScene != null) {
+                detachSceneHandlers(oldScene);
+                if (gameLoop != null) {
+                    gameLoop.stop();
+                    gameLoop = null;
+                }
+            }
+            if (newScene != null) {
+                setupControls(newScene);
+                startGameLoop();
+            }
+        });
     }
 
     private void setupControls(Scene scene) {
@@ -179,10 +194,10 @@ public class GameController implements Initializable {
                 if ((now - lastLogicTickNanos) / 1_000_000_000.0 >= LOGIC_INTERVAL_SEC) {
                     logicGrid.tick();
                     lastLogicTickNanos = now;
-                    shopManager.refreshUI(); // <--- This replaces the old updateMoneyLabel()!
+                    shopManager.refreshUI();
                 }
 
-                renderGraphics();
+                renderer.render(gameCanvas, logicGrid, shopManager, mouseWorldX, mouseWorldY, placementFacing, shopPopup.isVisible());
             }
         };
         gameLoop.start();
