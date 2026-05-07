@@ -6,12 +6,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.application.Platform;
 
@@ -42,6 +45,7 @@ public class GameController implements Initializable {
     @FXML private HBox inventoryBox;
     @FXML private Label moneyLabel;
     @FXML private Label shopHintLabel;
+    @FXML private TilePane shopItemContainer;
 
     // ==========================================
     // Core Game Systems & Managers
@@ -77,6 +81,7 @@ public class GameController implements Initializable {
                 renderer::imageForMachineType, // Tell ShopManager to ask the Renderer for images
                 this::updateShopHint           // Callback to update hint text when inventory changes
         );
+        generateShopButtons();
 
         shopManager.refreshUI();
 
@@ -207,10 +212,29 @@ public class GameController implements Initializable {
         }
     }
 
-    @FXML void buyDropper() { shopManager.attemptBuy(MachineType.DROPPER); }
-    @FXML void buyConveyor() { shopManager.attemptBuy(MachineType.CONVEYOR); }
-    @FXML void buyUpgrader() { shopManager.attemptBuy(MachineType.UPGRADER); }
-    @FXML void buyFurnace() { shopManager.attemptBuy(MachineType.FURNACE); }
+    private void generateShopButtons() {
+        if (shopItemContainer == null) return;
+
+        shopItemContainer.getChildren().clear();
+
+        for (MachineType type : MachineType.values()) {
+            if (type == MachineType.NONE) continue;
+
+            Button buyBtn = new Button("Buy " + type.name() + " ($" + type.getCost() + ")");
+            buyBtn.getStyleClass().add("shop-button"); // For your CSS!
+
+            ImageView icon = new ImageView(renderer.imageForMachineType(type));
+            icon.setFitWidth(32);
+            icon.setFitHeight(32);
+            buyBtn.setGraphic(icon);
+
+            buyBtn.setOnAction(e -> {
+                shopManager.attemptBuy(type);
+            });
+            
+            shopItemContainer.getChildren().add(buyBtn);
+        }
+    }
 
     private void updateShopHint() {
         // Safety check to ensure the UI and ShopManager are ready

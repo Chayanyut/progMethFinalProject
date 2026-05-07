@@ -60,7 +60,7 @@
           StackPane.alignment="CENTER"
           style="-fx-background-color: #2c3e50; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-padding: 14;">
         <children>
-            <HBox alignment="CENTER_LEFT" spacing="10.0">
+            <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 0 0 10 0;">
                 <children>
                     <Label text="Shop" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
                     <Pane HBox.hgrow="ALWAYS"/>
@@ -69,54 +69,15 @@
                 </children>
             </HBox>
 
-            <TabPane tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent;">
-                <tabs>
-                    <Tab text="Production">
-                        <content>
-                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
-                                <children>
-                                    <Button mnemonicParsing="false" text="Buy Dropper ($50)" onAction="#buyDropper"
-                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
-                                </children>
-                            </TilePane>
-                        </content>
-                    </Tab>
-                    <Tab text="Transport">
-                        <content>
-                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
-                                <children>
-                                    <Button mnemonicParsing="false" text="Buy Conveyor ($10)" onAction="#buyConveyor"
-                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
-                                </children>
-                            </TilePane>
-                        </content>
-                    </Tab>
-                    <Tab text="Upgrades">
-                        <content>
-                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
-                                <children>
-                                    <Button mnemonicParsing="false" text="Buy Upgrader ($100)" onAction="#buyUpgrader"
-                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
-                                </children>
-                            </TilePane>
-                        </content>
-                    </Tab>
-                    <Tab text="Processing">
-                        <content>
-                            <TilePane prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;">
-                                <children>
-                                    <Button mnemonicParsing="false" text="Buy Furnace ($200)" onAction="#buyFurnace"
-                                            style="-fx-background-color: #444; -fx-text-fill: white; -fx-padding: 10 14 10 14;"/>
-                                </children>
-                            </TilePane>
-                        </content>
-                    </Tab>
-                </tabs>
-            </TabPane>
+            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
+                <content>
+                    <TilePane fx:id="shopItemContainer" prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;"/>
+                </content>
+            </ScrollPane>
 
             <Label fx:id="shopHintLabel" text="Select a machine, then click the grid to place."
                    wrapText="true"
-                   style="-fx-text-fill: #cfcfcf; -fx-font-size: 12px; -fx-padding: 6 2 0 2;"/>
+                   style="-fx-text-fill: #cfcfcf; -fx-font-size: 12px; -fx-padding: 10 2 0 2;"/>
         </children>
     </VBox>
 </StackPane>
