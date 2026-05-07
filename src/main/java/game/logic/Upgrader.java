@@ -16,6 +16,9 @@ public class Upgrader extends Conveyor {
     }
 
     @Override
+    public MachineType getType() { return MachineType.UPGRADER; }
+
+    @Override
     public void processItem(Item item) {
         item.multiplyValue(upgradeFactor);
     }

@@ -59,6 +59,8 @@ public abstract class Machine implements Tickable {
         this.currentItem = currentItem;
     }
 
+    public abstract MachineType getType();
+
     /**
      * Invoked after an item is accepted into {@link #currentItem}.
      */

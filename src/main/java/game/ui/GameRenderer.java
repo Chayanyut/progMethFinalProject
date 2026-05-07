@@ -23,11 +23,16 @@ public class GameRenderer {
     }
 
     private void preloadImages() {
-        imageCache.put("dropper.png", getImage("dropper.png", "Dr"));
-        imageCache.put("conveyor.png", getImage("conveyor.png", "Cv"));
-        imageCache.put("upgrader.png", getImage("upgrader.png", "Up"));
-        imageCache.put("furnace.png", getImage("furnace.png", "Fn"));
-        imageCache.put("item.png", getImage("item.png", "It"));
+        imageCache.put("item.png", getImage("item.png", "It")); // Standard item
+
+        for (MachineType type : MachineType.values()) {
+            if (type == MachineType.NONE || type.getCategory() == null) continue;
+
+            imageCache.put(
+                    type.getImageName(),
+                    getImage(type.getImageName(), type.getFallBackText())
+            );
+        }
     }
 
     private Image getImage(String filename, String fallbackText) {
@@ -57,13 +62,6 @@ public class GameRenderer {
 
     public Image imageForMachineType(MachineType s) {
         return imageCache.get(s.getImageName());
-    }
-
-    private Image imageForMachine(Machine m) {
-        if (m instanceof Upgrader) return imageCache.get("upgrader.png");
-        if (m instanceof Dropper) return imageCache.get("dropper.png");
-        if (m instanceof Furnace) return imageCache.get("furnace.png");
-        return imageCache.get("conveyor.png");
     }
 
     private double facingAngle(Direction d) {
@@ -108,7 +106,7 @@ public class GameRenderer {
                 if (m == null) continue;
 
                 double px = x * TILE_SIZE, py = y * TILE_SIZE;
-                drawImageRotated(gc, imageForMachine(m), px, py, TILE_SIZE, TILE_SIZE, facingAngle(m.getFacing()));
+                drawImageRotated(gc, imageForMachineType(m.getType()), px, py, TILE_SIZE, TILE_SIZE, facingAngle(m.getFacing()));
 
                 if (m.getCurrentItem() != null) {
                     double inset = TILE_SIZE * 0.2;

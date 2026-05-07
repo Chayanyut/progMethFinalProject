@@ -31,4 +31,7 @@ public class Dropper extends Conveyor {
         }
         acceptItem(new Item(spawnValue));
     }
+
+    @Override
+    public MachineType getType() { return MachineType.DROPPER; }
 }

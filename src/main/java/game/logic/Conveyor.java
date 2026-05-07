@@ -39,4 +39,7 @@ public class Conveyor extends Machine {
         }
         return Optional.of(new OutgoingTransfer(getGridX(), getGridY(), nx, ny, outgoing));
     }
+
+    @Override
+    public MachineType getType() { return MachineType.CONVEYOR; }
 }

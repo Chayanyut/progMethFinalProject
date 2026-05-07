@@ -29,4 +29,7 @@ public class Furnace extends Machine {
         bank.deposit(item.getValue());
         clearCurrentItem();
     }
+
+    @Override
+    public MachineType getType() { return MachineType.FURNACE; }
 }
