@@ -6,8 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,6 +19,8 @@ import javafx.application.Platform;
 
 
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -45,7 +46,7 @@ public class GameController implements Initializable {
     @FXML private HBox inventoryBox;
     @FXML private Label moneyLabel;
     @FXML private Label shopHintLabel;
-    @FXML private TilePane shopItemContainer;
+    @FXML private TabPane shopTabPane;
 
     // ==========================================
     // Core Game Systems & Managers
@@ -213,26 +214,46 @@ public class GameController implements Initializable {
     }
 
     private void generateShopButtons() {
-        if (shopItemContainer == null) return;
+        if (shopTabPane == null) return;
+        shopTabPane.getTabs().clear();
 
-        shopItemContainer.getChildren().clear();
+        // 1. Create a Tab and a TilePane for every Category first
+        Map<MachineCategory, TilePane> categoryPanes = new HashMap<>();
 
+        for (MachineCategory cat : MachineCategory.values()) {
+            TilePane tilePane = new TilePane();
+            tilePane.setPrefColumns(2);
+            tilePane.setHgap(10.0);
+            tilePane.setVgap(10.0);
+            tilePane.setStyle("-fx-padding: 10;");
+
+            ScrollPane scrollPane = new ScrollPane(tilePane);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setStyle("-fx-background-color: transparent; -fx-background: transparent;");
+
+            Tab tab = new Tab(cat.getDisplayName());
+            tab.setContent(scrollPane);
+
+            shopTabPane.getTabs().add(tab);
+            categoryPanes.put(cat, tilePane); // Save the reference so we can add buttons to it later!
+        }
+
+        // 2. Loop through the machines and put them in their assigned Tab
         for (MachineType type : MachineType.values()) {
-            if (type == MachineType.NONE) continue;
+            if (type == MachineType.NONE || type.getCategory() == null) continue;
 
             Button buyBtn = new Button("Buy " + type.name() + " ($" + type.getCost() + ")");
-            buyBtn.getStyleClass().add("shop-button"); // For your CSS!
+            buyBtn.getStyleClass().add("shop-button");
 
             ImageView icon = new ImageView(renderer.imageForMachineType(type));
             icon.setFitWidth(32);
             icon.setFitHeight(32);
             buyBtn.setGraphic(icon);
 
-            buyBtn.setOnAction(e -> {
-                shopManager.attemptBuy(type);
-            });
-            
-            shopItemContainer.getChildren().add(buyBtn);
+            buyBtn.setOnAction(e -> shopManager.attemptBuy(type));
+
+            // Look up the correct TilePane from our map, and add the button to it!
+            categoryPanes.get(type.getCategory()).getChildren().add(buyBtn);
         }
     }
 

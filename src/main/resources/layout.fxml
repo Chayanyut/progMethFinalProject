@@ -9,8 +9,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.layout.TilePane?>
 <?import javafx.scene.control.ScrollPane?>
 
 <StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
@@ -69,11 +67,7 @@
                 </children>
             </HBox>
 
-            <ScrollPane fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;" VBox.vgrow="ALWAYS">
-                <content>
-                    <TilePane fx:id="shopItemContainer" prefColumns="2" hgap="10.0" vgap="10.0" style="-fx-padding: 10;"/>
-                </content>
-            </ScrollPane>
+            <TabPane fx:id="shopTabPane" tabClosingPolicy="UNAVAILABLE" style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS"/>
 
             <Label fx:id="shopHintLabel" text="Select a machine, then click the grid to place."
                    wrapText="true"
