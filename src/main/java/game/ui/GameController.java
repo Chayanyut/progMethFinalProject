@@ -155,7 +155,9 @@ public class GameController implements Initializable {
                 placementManager.getMouseWorldX(),
                 placementManager.getMouseWorldY(),
                 placementManager.getPlacementFacing(),
-                shopPopup.isVisible()
+                shopPopup.isVisible(),          // shopVisible
+                inventoryBar.isVisible(),        // inventoryVisible  ← NEW
+                placementManager.getPlacementMode() // placementMode  ← NEW
         );
     }
 

@@ -25,7 +25,6 @@ public class GameRenderer {
     }
 
     private void preloadImages() {
-        // 1. Load all Machines from the "machine" folder
         for (MachineType type : MachineType.values()) {
             if (type == MachineType.NONE || type.getCategory() == null) continue;
 
@@ -36,11 +35,9 @@ public class GameRenderer {
             }
         }
 
-        // 2. Load all Items from the "item" folder
         for (ItemType item : ItemType.values()) {
             String fallback = item.name().substring(0, Math.min(2, item.name().length()));
             fallback = fallback.substring(0, 1).toUpperCase() + fallback.substring(1).toLowerCase();
-
             imageCache.put(item.getImageName(), getImage(item.getImageName(), fallback, "item"));
         }
 
@@ -50,18 +47,15 @@ public class GameRenderer {
     private Image loadRequiredAsset(String fileName, String subfolder) {
         String path = "/images/" + subfolder + "/" + fileName;
         InputStream stream = GameRenderer.class.getResourceAsStream(path);
-
         if (stream == null) {
             System.err.println("CRITICAL FAILURE: Missing required asset: " + path);
             System.exit(1);
         }
-
         return new Image(stream);
     }
 
     private Image getImage(String filename, String fallbackText, String subfolder) {
         String path = "/images/" + subfolder + "/" + filename;
-
         try (InputStream stream = GameRenderer.class.getResourceAsStream(path)) {
             if (stream != null) {
                 Image loaded = new Image(stream);
@@ -104,8 +98,14 @@ public class GameRenderer {
         gc.restore();
     }
 
+    /**
+     * @param shopVisible      true when the shop popup is open
+     * @param inventoryVisible true when the inventory bar is open
+     * @param placementMode    current placement mode (BUILD / REMOVE)
+     */
     public void render(Canvas gameCanvas, GridSystem logicGrid, ShopManager shopManager,
-                       double mouseWorldX, double mouseWorldY, Direction placementFacing, boolean shopVisible) {
+                       double mouseWorldX, double mouseWorldY, Direction placementFacing,
+                       boolean shopVisible, boolean inventoryVisible, PlacementMode placementMode) {
 
         GraphicsContext gc = gameCanvas.getGraphicsContext2D();
         gc.clearRect(0, 0, gameCanvas.getWidth(), gameCanvas.getHeight());
@@ -135,38 +135,42 @@ public class GameRenderer {
                 double px = x * TILE_SIZE, py = y * TILE_SIZE;
                 drawImageRotated(gc, imageForMachineType(m.getType()), px, py, TILE_SIZE, TILE_SIZE, facingAngle(m.getFacing()));
 
-                // --- REPLACE THIS IF STATEMENT ---
                 if (m.getCurrentItem() != null) {
                     double inset = TILE_SIZE * 0.2;
-
-                    // NEW: Dynamically fetch the specific item's image!
                     String exactImageName = m.getCurrentItem().getType().getImageName();
                     Image exactItemImg = imageCache.get(exactImageName);
-
                     drawImageRotated(gc, exactItemImg, px + inset * 0.5, py + inset * 0.5, TILE_SIZE - inset, TILE_SIZE - inset, 0);
                 }
-                // ---------------------------------
             }
         }
 
-        // Draw Hologram
-        renderHologram(gc, logicGrid, shopManager, mouseWorldX, mouseWorldY, placementFacing, shopVisible);
+        // Draw Hologram — only when inventory bar is open and in BUILD mode
+        renderHologram(gc, logicGrid, shopManager, mouseWorldX, mouseWorldY,
+                placementFacing, shopVisible, inventoryVisible, placementMode);
     }
 
     private void renderHologram(GraphicsContext gc, GridSystem logicGrid, ShopManager shopManager,
-                                double mouseWorldX, double mouseWorldY, Direction placementFacing, boolean shopVisible) {
-        if (shopVisible || shopManager.getActiveSelection() == MachineType.NONE) return;
+                                double mouseWorldX, double mouseWorldY, Direction placementFacing,
+                                boolean shopVisible, boolean inventoryVisible, PlacementMode placementMode) {
+
+        // Hologram only shows when: inventory bar is open, not in shop, in BUILD mode, something selected
+        if (shopVisible) return;
+        if (!inventoryVisible) return;
+        if (placementMode != PlacementMode.BUILD) return;
+        if (shopManager.getActiveSelection() == MachineType.NONE) return;
 
         int gx = (int) Math.floor(mouseWorldX / TILE_SIZE);
         int gy = (int) Math.floor(mouseWorldY / TILE_SIZE);
         if (!logicGrid.isInside(gx, gy)) return;
 
-        boolean valid = logicGrid.getMachine(gx, gy) == null && shopManager.getInventoryCount(shopManager.getActiveSelection()) > 0;
+        boolean valid = logicGrid.getMachine(gx, gy) == null
+                && shopManager.getInventoryCount(shopManager.getActiveSelection()) > 0;
         double px = gx * TILE_SIZE, py = gy * TILE_SIZE;
 
         gc.save();
         gc.setGlobalAlpha(0.4);
-        drawImageRotated(gc, imageForMachineType(shopManager.getActiveSelection()), px, py, TILE_SIZE, TILE_SIZE, facingAngle(placementFacing));
+        drawImageRotated(gc, imageForMachineType(shopManager.getActiveSelection()),
+                px, py, TILE_SIZE, TILE_SIZE, facingAngle(placementFacing));
         gc.setFill(valid ? Color.web("#3498db", 0.4) : Color.web("#e74c3c", 0.5));
         gc.fillRect(px, py, TILE_SIZE, TILE_SIZE);
         gc.restore();
