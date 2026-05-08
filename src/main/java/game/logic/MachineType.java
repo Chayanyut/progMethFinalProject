@@ -85,31 +85,31 @@ public enum MachineType {
     UP1(150, "UP1.jpg", MachineCategory.UPGRADES, "Upgrades1") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 5.0);
+            return new Upgrader(this, getCost(), face, 2.0);
         }
     },
     UP2(2500, "UP2.jpg", MachineCategory.UPGRADES, "Upgrades2") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 25.0);
+            return new Upgrader(this, getCost(), face, 5.0);
         }
     },
     UP3(80000, "UP3.jpg", MachineCategory.UPGRADES, "Upgrades3") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 100.0);
+            return new Upgrader(this, getCost(), face, 15.0);
         }
     },
-    UP4(350000, "UP4.jpg", MachineCategory.UPGRADES, "Upgrades4") {
+    UP4(3500000, "UP4.jpg", MachineCategory.UPGRADES, "Upgrades4") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 500.0);
+            return new Upgrader(this, getCost(), face, 60.0);
         }
     },
-    UP5(2500000, "UP5.jpg", MachineCategory.UPGRADES, "Upgrades5") {
+    UP5(250000000, "UP5.jpg", MachineCategory.UPGRADES, "Upgrades5") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 5000.0);
+            return new Upgrader(this, getCost(), face, 250.0);
         }
     },
 
