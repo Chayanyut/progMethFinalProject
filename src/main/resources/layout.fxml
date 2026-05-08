@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.canvas.Canvas?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-           fx:controller="game.ui.GameController"
-           stylesheets="@style.css">
+<StackPane stylesheets="@style.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.ui.GameController">
 
     <!-- LAYER 1: Game World -->
     <Pane style="-fx-background-color: #111111;">
-        <Canvas fx:id="gameCanvas" width="2000.0" height="2000.0"/>
+        <Canvas fx:id="gameCanvas" height="2000.0" width="2000.0" />
     </Pane>
 
     <!-- LAYER 2: HUD -->
@@ -25,10 +16,8 @@
 
         <!-- Top: money bar -->
         <top>
-            <HBox alignment="CENTER_LEFT" spacing="12.0"
-                  style="-fx-background-color: #1a1a1a; -fx-padding: 10 14 10 14;">
-                <Label fx:id="moneyLabel" text="Balance: $500"
-                       style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;"/>
+            <HBox alignment="CENTER_LEFT" spacing="12.0" style="-fx-background-color: #1a1a1a; -fx-padding: 10 14 10 14;">
+                <Label fx:id="moneyLabel" style="-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;" text="Balance: $500" />
             </HBox>
         </top>
 
@@ -37,23 +26,14 @@
             <VBox>
 
                 <!-- Inventory bar — hidden until B is pressed -->
-                <VBox fx:id="inventoryBar"
-                      visible="false"
-                      managed="false"
-                      prefHeight="130"
-                      style="-fx-background-color: #1a1a2e; -fx-border-color: #2a4a6a; -fx-border-width: 1 0 0 0;">
-                    <TabPane fx:id="inventoryTabPane"
-                             tabClosingPolicy="UNAVAILABLE"
-                             VBox.vgrow="ALWAYS"
-                             style="-fx-background-color: transparent;"/>
+                <VBox fx:id="inventoryBar" managed="false" prefHeight="130" style="-fx-background-color: #1a1a2e; -fx-border-color: #2a4a6a; -fx-border-width: 1 0 0 0;" visible="false">
+                    <TabPane fx:id="inventoryTabPane" style="-fx-background-color: transparent;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
                 </VBox>
 
                 <!-- Always-visible button row -->
-                <HBox alignment="CENTER_RIGHT" spacing="10.0"
-                      style="-fx-background-color: rgba(0,0,0,0.5); -fx-padding: 8 12 8 12;">
-                    <Button mnemonicParsing="false" text="Inventory (B)" onAction="#toggleInventory"
-                            style="-fx-background-color: #27ae60;"/>
-                    <Button mnemonicParsing="false" text="Shop (E)" onAction="#toggleShop"/>
+                <HBox alignment="CENTER_RIGHT" spacing="10.0" style="-fx-background-color: rgba(0,0,0,0.5); -fx-padding: 8 12 8 12;">
+                    <Button mnemonicParsing="false" onAction="#toggleInventory" style="-fx-background-color: #27ae60;" text="Inventory (B)" />
+                    <Button mnemonicParsing="false" onAction="#toggleShop" text="Shop (E)" />
                 </HBox>
 
             </VBox>
@@ -62,22 +42,14 @@
     </BorderPane>
 
     <!-- LAYER 3: Shop Popup -->
-    <VBox fx:id="shopPopup" visible="false" maxWidth="600.0" maxHeight="400.0"
-          StackPane.alignment="CENTER"
-          style="-fx-background-color: #2c3e50; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-padding: 14;">
+    <VBox fx:id="shopPopup" maxHeight="400.0" maxWidth="600.0" style="-fx-background-color: #2c3e50; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0); -fx-padding: 14;" visible="false" StackPane.alignment="CENTER">
         <HBox alignment="CENTER_LEFT" spacing="10.0" style="-fx-padding: 0 0 10 0;">
-            <Label text="Shop" style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;"/>
-            <Pane HBox.hgrow="ALWAYS"/>
-            <Button mnemonicParsing="false" text="Close" onAction="#toggleShop"
-                    style="-fx-background-color: #444; -fx-text-fill: white;"/>
+            <Label style="-fx-text-fill: white; -fx-font-size: 18px; -fx-font-weight: bold;" text="Shop" />
+            <Pane HBox.hgrow="ALWAYS" />
+            <Button mnemonicParsing="false" onAction="#toggleShop" style="-fx-background-color: #444; -fx-text-fill: white;" text="Close" />
         </HBox>
 
-        <TabPane fx:id="shopTabPane" tabClosingPolicy="UNAVAILABLE"
-                 style="-fx-background-color: transparent;" VBox.vgrow="ALWAYS"/>
-
-        <Label fx:id="shopHintLabel" text="Select a machine, then click the grid to place."
-               wrapText="true"
-               style="-fx-text-fill: #cfcfcf; -fx-font-size: 12px; -fx-padding: 10 2 0 2;"/>
+        <TabPane fx:id="shopTabPane" style="-fx-background-color: transparent;" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS" />
     </VBox>
 
 </StackPane>
