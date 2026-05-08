@@ -6,7 +6,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.input.KeyCode;
 
@@ -26,7 +25,8 @@ public class GameController implements Initializable {
     // ==========================================
     @FXML private Canvas  gameCanvas;
     @FXML private VBox    shopPopup;
-    @FXML private HBox    inventoryBox;
+    @FXML private VBox    inventoryBar;       // replaces HBox inventoryBox
+    @FXML private TabPane inventoryTabPane;   // inside inventoryBar
     @FXML private Label   moneyLabel;
     @FXML private Label   shopHintLabel;
     @FXML private TabPane shopTabPane;
@@ -61,18 +61,18 @@ public class GameController implements Initializable {
     }
 
     // ==========================================
-    // Wiring — each method sets up one manager
+    // Wiring
     // ==========================================
 
     private void initShop() {
         shopManager = new ShopManager(
                 bank,
-                inventoryBox,
                 moneyLabel,
                 renderer::imageForMachineType,
                 () -> { if (placementManager != null) placementManager.updateHint(); }
         );
         ShopUIBuilder.build(shopTabPane, renderer::imageForMachineType, shopManager::attemptBuy);
+        shopManager.initInventoryUI(inventoryTabPane);
         shopManager.refreshUI();
     }
 
@@ -92,9 +92,11 @@ public class GameController implements Initializable {
     private void initInput() {
         inputHandler = new InputHandler(
                 this::toggleShop,
+                this::toggleInventory,
                 placementManager::cyclePlacementFacing,
                 camera::applyZoom,
-                () -> shopPopup != null && shopPopup.isVisible()
+                () -> shopPopup != null && shopPopup.isVisible(),
+                () -> inventoryBar != null && inventoryBar.isVisible()
         );
     }
 
@@ -157,13 +159,36 @@ public class GameController implements Initializable {
     }
 
     // ==========================================
-    // Shop Toggle
+    // Panel Toggles
     // ==========================================
 
     @FXML
     void toggleShop() {
         boolean opening = !shopPopup.isVisible();
-        shopPopup.setVisible(opening);
-        if (opening) inputHandler.clearKeys();
+        if (opening) setInventoryVisible(false); // close inventory first
+        setShopVisible(opening);
+        inputHandler.clearKeys();
+    }
+
+    @FXML
+    void toggleInventory() {
+        boolean opening = !inventoryBar.isVisible();
+        if (opening) setShopVisible(false); // close shop first
+        setInventoryVisible(opening);
+        inputHandler.clearKeys();
+    }
+
+    // ==========================================
+    // Visibility helpers
+    // ==========================================
+
+    private void setShopVisible(boolean visible) {
+        shopPopup.setVisible(visible);
+        shopPopup.setManaged(visible);
+    }
+
+    private void setInventoryVisible(boolean visible) {
+        inventoryBar.setVisible(visible);
+        inventoryBar.setManaged(visible);
     }
 }

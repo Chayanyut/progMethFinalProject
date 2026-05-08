@@ -10,11 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleConsumer;
 
-/**
- * Owns all keyboard and mouse-scroll input for the game scene.
- * Fires callbacks instead of acting on game state directly,
- * keeping it decoupled from every other system.
- */
 public class InputHandler {
 
     // ==========================================
@@ -25,22 +20,28 @@ public class InputHandler {
     // ==========================================
     // Callbacks
     // ==========================================
-    private final Runnable      onToggleShop;   // B key
-    private final Runnable      onCycleFacing;  // R key
-    private final DoubleConsumer onZoom;         // Scroll — receives zoom factor
-    private final BooleanSupplier isShopVisible; // Lets InputHandler gate its own logic
+    private final Runnable       onToggleShop;
+    private final Runnable       onToggleInventory;
+    private final Runnable       onCycleFacing;
+    private final DoubleConsumer onZoom;
+    private final BooleanSupplier isShopVisible;
+    private final BooleanSupplier isInventoryVisible;
 
     // ==========================================
     // Constructor
     // ==========================================
     public InputHandler(Runnable onToggleShop,
+                        Runnable onToggleInventory,
                         Runnable onCycleFacing,
                         DoubleConsumer onZoom,
-                        BooleanSupplier isShopVisible) {
-        this.onToggleShop  = onToggleShop;
-        this.onCycleFacing = onCycleFacing;
-        this.onZoom        = onZoom;
-        this.isShopVisible = isShopVisible;
+                        BooleanSupplier isShopVisible,
+                        BooleanSupplier isInventoryVisible) {
+        this.onToggleShop       = onToggleShop;
+        this.onToggleInventory  = onToggleInventory;
+        this.onCycleFacing      = onCycleFacing;
+        this.onZoom             = onZoom;
+        this.isShopVisible      = isShopVisible;
+        this.isInventoryVisible = isInventoryVisible;
     }
 
     // ==========================================
@@ -63,35 +64,32 @@ public class InputHandler {
     // ==========================================
     public Set<KeyCode> getActiveKeys() { return activeKeys; }
 
-    /** Called by GameController when the shop opens so held keys don't linger. */
     public void clearKeys() { activeKeys.clear(); }
 
     // ==========================================
-    // Handlers (private — scene events only)
+    // Handlers
     // ==========================================
     private void handleKeyPressed(KeyEvent event) {
         KeyCode code = event.getCode();
+        boolean anyPanelOpen = isShopVisible.getAsBoolean() || isInventoryVisible.getAsBoolean();
 
-        // When the shop is open only hotkeys are allowed — no movement input
-        if (isShopVisible.getAsBoolean()) {
-            if (code == KeyCode.R) onCycleFacing.run();
-            if (code == KeyCode.B) onToggleShop.run();
-            return;
-        }
+        // Toggle keys always fire regardless of panel state
+        if (code == KeyCode.E) { onToggleShop.run();      return; }
+        if (code == KeyCode.B) { onToggleInventory.run(); return; }
 
-        if (code == KeyCode.B) { onToggleShop.run();  return; }
-        if (code == KeyCode.R) { onCycleFacing.run(); return; }
+        // R only works when no panel is open
+        if (code == KeyCode.R && !anyPanelOpen) { onCycleFacing.run(); return; }
 
-        activeKeys.add(code);
+        // Movement keys only tracked when no panel is blocking
+        if (!anyPanelOpen) activeKeys.add(code);
     }
 
     private void handleKeyReleased(KeyEvent event) {
-        if (isShopVisible.getAsBoolean()) return;
         activeKeys.remove(event.getCode());
     }
 
     private void handleScroll(ScrollEvent event) {
-        if (isShopVisible.getAsBoolean()) return;
+        if (isShopVisible.getAsBoolean() || isInventoryVisible.getAsBoolean()) return;
         double factor = event.getDeltaY() > 0 ? 1.08 : 1.0 / 1.08;
         onZoom.accept(factor);
         event.consume();

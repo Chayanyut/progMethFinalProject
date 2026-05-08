@@ -1,18 +1,74 @@
 .root { -fx-font-family: "Segoe UI", Helvetica, sans-serif; }
+
+/* ── Buttons ──────────────────────────────────────────────────── */
 .button {
     -fx-background-color: #2980b9; -fx-text-fill: white; -fx-font-weight: bold;
     -fx-background-radius: 5; -fx-padding: 8 16 8 16; -fx-cursor: hand;
 }
 .button:hover { -fx-background-color: #3498db; }
+
+/* ── Shop tab pane ────────────────────────────────────────────── */
 .tab-pane .tab-header-area .tab-header-background { -fx-background-color: #1e1e1e; }
 .tab-pane .tab { -fx-background-color: #2b2b2b; -fx-background-radius: 5 5 0 0; }
 .tab-pane .tab:selected { -fx-background-color: #34495e; }
 .tab-pane .tab .tab-label { -fx-text-fill: #ecf0f1; -fx-font-weight: bold; }
 .tab-pane .tab-content-area { -fx-background-color: #34495e; -fx-padding: 15; }
+
+/* ── Old inventory slot styles (kept for any leftover references) */
 .inventory-slot {
     -fx-background-color: #34495e; -fx-border-color: #2c3e50; -fx-border-width: 2;
     -fx-background-radius: 5; -fx-border-radius: 5; -fx-cursor: hand; -fx-padding: 5;
 }
-.inventory-slot-active { -fx-border-color: #f1c40f; } /* Gold border for equipped */
-.inventory-slot-empty { -fx-opacity: 0.5; }
+.inventory-slot-active { -fx-border-color: #f1c40f; }
+.inventory-slot-empty  { -fx-opacity: 0.5; }
 
+/* ── Inventory bar tab pane chrome ────────────────────────────── */
+#inventoryTabPane .tab-header-area .tab-header-background {
+    -fx-background-color: #0f1421;
+}
+#inventoryTabPane .tab {
+    -fx-background-color: #1a2535;
+    -fx-padding: 4 14 4 14;
+    -fx-background-radius: 5 5 0 0;
+}
+#inventoryTabPane .tab:selected {
+    -fx-background-color: #1e3a5f;
+}
+#inventoryTabPane .tab .tab-label {
+    -fx-text-fill: #8eacc8;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+#inventoryTabPane .tab:selected .tab-label {
+    -fx-text-fill: #dce6f0;
+}
+#inventoryTabPane .tab-content-area {
+    -fx-background-color: #141e2b;
+    -fx-padding: 0;
+}
+
+/* ── Inventory tile ───────────────────────────────────────────── */
+.inv-tile {
+    -fx-background-color: #1e2d3d;
+    -fx-background-radius: 6;
+    -fx-border-color: #2a4a6a;
+    -fx-border-radius: 6;
+    -fx-border-width: 1;
+    -fx-cursor: hand;
+}
+.inv-tile:hover {
+    -fx-background-color: #253d54;
+    -fx-border-color: #4a7aa0;
+}
+
+/* Active/selected tile — gold border to match existing shop style */
+.inv-tile.inv-tile-active {
+    -fx-background-color: #1a3a5c;
+    -fx-border-color: #f1c40f;
+    -fx-border-width: 2;
+}
+
+/* Zero-quantity tile — dimmed but still visible */
+.inv-tile.inv-tile-empty {
+    -fx-opacity: 0.55;
+}
