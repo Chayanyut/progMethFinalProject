@@ -20,109 +20,96 @@ public enum MachineType {
     },
 
     // Dropper
-    DROPPER(50, "dropper.png", MachineCategory.PRODUCTION, "Dropper") {
+    COALDROPPER(50, "DpCoal.png", MachineCategory.PRODUCTION, "Coal") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.COAL); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.COAL);
         }
     },
-
-    COAL(50, "DpCoal.png", MachineCategory.PRODUCTION, "Coal") {
+    COPPERDROPPER(250, "DpCopper.png", MachineCategory.PRODUCTION, "Copper") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.COAL); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.COPPER);
         }
     },
-    Copper(250, "DpCopper.png", MachineCategory.PRODUCTION, "Copper") {
+    IRONDROPPER(1000, "DpIron.png", MachineCategory.PRODUCTION, "Iron") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.COPPER); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.IRON);
         }
     },
-    IRON(1000, "DpIron.png", MachineCategory.PRODUCTION, "Iron") {
+    SILVERDROPPER(4000, "DpSilver.png", MachineCategory.PRODUCTION, "Silver") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.IRON); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.SILVER);
         }
     },
-    SILVER(4000, "DpSilver.png", MachineCategory.PRODUCTION, "Silver") {
+    GOLDDROPPER(15000, "DpGold.png", MachineCategory.PRODUCTION, "Gold") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.SILVER); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.GOLD);
         }
     },
-    GOLD(15000, "DpGold.png", MachineCategory.PRODUCTION, "Gold") {
+    PLATINUMDROPPER(50000, "DpPlatinum.png", MachineCategory.PRODUCTION, "Platinum") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.GOLD); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.PLATINUM);
         }
     },
-    PLATINUM(50000, "DpPlatinum.png", MachineCategory.PRODUCTION, "Platinum") {
+    RUBYDROPPER(150000, "DpRuby.png", MachineCategory.PRODUCTION, "Ruby") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.PLATINUM); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.RUBY);
         }
     },
-    RUBY(150000, "DpRuby.png", MachineCategory.PRODUCTION, "Ruby") {
+    SAPPHIREDROPPER(500000, "DpSapphire.png", MachineCategory.PRODUCTION, "Sapphire") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.RUBY); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.SAPPHIRE);
         }
     },
-    SAPPHIRE(500000, "DpSapphire.png", MachineCategory.PRODUCTION, "Sapphire") {
+    EMERALDDROPPER(1500000, "DpEmerald.png", MachineCategory.PRODUCTION, "Emerald") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.SAPPHIRE); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.EMERALD);
         }
     },
-    EMERALD(1500000, "DpEmerald.png", MachineCategory.PRODUCTION, "Emerald") {
+    DIAMONDDROPPER(5000000, "DpDiamond.png", MachineCategory.PRODUCTION, "Diamond") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.EMERALD); // 10.0 drop rate
-        }
-    },
-    DIAMOND(5000000, "DpDiamond.png", MachineCategory.PRODUCTION, "Diamond") {
-        @Override
-        public Machine create(Direction face, PlayerBank bank) {
-            return new Dropper(this, getCost(), face, ItemType.DIAMOND); // 10.0 drop rate
+            return new Dropper(this, getCost(), face, ItemType.DIAMOND);
         }
     },
 
     // Upgrader
-    UPGRADER(100, "upgrader.png", MachineCategory.UPGRADES, "Upgrades") {
-        @Override
-        public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 2.0); // 2.0 upgrade multiplier
-        }
-    },
     UP1(150, "UP1.jpg", MachineCategory.UPGRADES, "Upgrades1") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 2.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 2.0);
         }
     },
     UP2(2500, "UP2.jpg", MachineCategory.UPGRADES, "Upgrades2") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 5.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 5.0);
         }
     },
     UP3(80000, "UP3.jpg", MachineCategory.UPGRADES, "Upgrades3") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 15.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 15.0);
         }
     },
     UP4(3500000, "UP4.jpg", MachineCategory.UPGRADES, "Upgrades4") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 60.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 60.0);
         }
     },
     UP5(250000000, "UP5.jpg", MachineCategory.UPGRADES, "Upgrades5") {
         @Override
         public Machine create(Direction face, PlayerBank bank) {
-            return new Upgrader(this, getCost(), face, 250.0); // 2.0 upgrade multiplier
+            return new Upgrader(this, getCost(), face, 250.0);
         }
     },
 
