@@ -18,6 +18,8 @@ public class GameRenderer {
     private static final double TILE_SIZE = GameConstants.TILE_SIZE;
     private final Map<String, Image> imageCache = new HashMap<>();
 
+    private Image gridTexture;
+
     public GameRenderer() {
         preloadImages();
     }
@@ -41,6 +43,8 @@ public class GameRenderer {
 
             imageCache.put(item.getImageName(), getImage(item.getImageName(), fallback, "item"));
         }
+
+        gridTexture = getImage("grid.png", "Grid", "environment");
     }
 
     private Image loadRequiredAsset(String fileName, String subfolder) {
@@ -110,8 +114,11 @@ public class GameRenderer {
         double worldH = logicGrid.getHeight() * TILE_SIZE;
 
         // Draw Floor
-        gc.setFill(Color.web("#7f8c8d"));
-        gc.fillRect(0, 0, worldW, worldH);
+        for (int x = 0; x < logicGrid.getWidth(); x++) {
+            for (int y = 0; y < logicGrid.getHeight(); y++) {
+                gc.drawImage(gridTexture, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+            }
+        }
 
         // Draw Grid Lines
         gc.setStroke(Color.color(0.25, 0.28, 0.32));
