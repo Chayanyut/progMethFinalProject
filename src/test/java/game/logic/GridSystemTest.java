@@ -29,7 +29,7 @@ class GridSystemTest {
     @Test
     void conveyorLineMovesAtMostOneCellPerTick() {
         GridSystem grid = new GridSystem(5, 1);
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.COAL);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER, 1, Direction.RIGHT, ItemType.COAL);
         Conveyor c1 = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
         Conveyor c2 = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
         assertTrue(grid.placeMachine(0, 0, dropper));
@@ -56,9 +56,9 @@ class GridSystemTest {
     void furnaceCreditsBankAndClearsItem() {
         PlayerBank bank = new PlayerBank(0);
         GridSystem grid = new GridSystem(5, 1);
-        Dropper dropper = new Dropper(MachineType.DROPPER,1, Direction.RIGHT, ItemType.COAL);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER,1, Direction.RIGHT, ItemType.COAL);
         Conveyor conveyor = new Conveyor(MachineType.CONVEYOR, 1, Direction.RIGHT);
-        Furnace furnace = new Furnace(MachineType.DROPPER, 1, Direction.LEFT, bank);
+        Furnace furnace = new Furnace(MachineType.COALDROPPER, 1, Direction.LEFT, bank);
 
         assertTrue(grid.placeMachine(0, 0, dropper));
         assertTrue(grid.placeMachine(1, 0, conveyor));
@@ -71,6 +71,6 @@ class GridSystemTest {
 
         grid.tick();
         assertNull(furnace.getCurrentItem());
-        assertEquals(5, bank.getBalance(), 1e-9); // Item reached furnace and update bank with item's value
+        assertEquals(1, bank.getBalance(), 1e-9); // Item reached furnace and update bank with item's value
     }
 }

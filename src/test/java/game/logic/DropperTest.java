@@ -8,27 +8,27 @@ class DropperTest {
 
     @Test
     void freshDropperHasNoItem() {
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.COAL);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER, 1, Direction.RIGHT, ItemType.COAL);
         assertNull(dropper.getCurrentItem());
     }
 
     @Test
     void spawnIfStillEmptyProducesItemWhenEmpty() {
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.COAL);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER, 1, Direction.RIGHT, ItemType.COAL);
         dropper.spawnIfStillEmpty(true);
         assertNotNull(dropper.getCurrentItem());
     }
 
     @Test
     void spawnedItemMatchesConfiguredType() {
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.GOLD);
+        Dropper dropper = new Dropper(MachineType.GOLDDROPPER, 1, Direction.RIGHT, ItemType.GOLD);
         dropper.spawnIfStillEmpty(true);
         assertEquals(ItemType.GOLD, dropper.getCurrentItem().getType());
     }
 
     @Test
     void spawnIfStillEmptyDoesNotReplaceExistingItem() {
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.COAL);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER, 1, Direction.RIGHT, ItemType.COAL);
         dropper.spawnIfStillEmpty(true);
         Item first = dropper.getCurrentItem();
         dropper.spawnIfStillEmpty(true);
@@ -37,7 +37,7 @@ class DropperTest {
 
     @Test
     void spawnIfStillEmptyWithFalseDoesNotSpawn() {
-        Dropper dropper = new Dropper(MachineType.DROPPER, 1, Direction.RIGHT, ItemType.IRON);
+        Dropper dropper = new Dropper(MachineType.COALDROPPER, 1, Direction.RIGHT, ItemType.IRON);
         dropper.spawnIfStillEmpty(false);
         assertNull(dropper.getCurrentItem());
     }
