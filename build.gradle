@@ -19,9 +19,12 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
 }
-application { mainClass = 'game.Main' }
+application { mainClass = 'game.Launcher' }
 tasks.named('test') { useJUnitPlatform() }
 shadowJar {
+    manifest {
+        attributes 'Main-Class': 'game.Launcher'
+    }
     archiveBaseName.set('TycoonGame')
     archiveClassifier.set('')
     archiveVersion.set('')
