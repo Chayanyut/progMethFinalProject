@@ -76,19 +76,23 @@ public class InputHandler {
     // Handlers
     // ==========================================
     private void handleKeyPressed(KeyEvent event) {
-        KeyCode code = event.getCode();
-        boolean anyPanelOpen = isShopVisible.getAsBoolean() || isInventoryVisible.getAsBoolean();
+        KeyCode code        = event.getCode();
+        boolean shopOpen    = isShopVisible.getAsBoolean();
+        boolean inventoryOpen = isInventoryVisible.getAsBoolean();
 
-        // These always fire regardless of panel state
         if (code == KeyCode.E)      { onToggleShop.run();      return; }
         if (code == KeyCode.B)      { onToggleInventory.run(); return; }
         if (code == KeyCode.DIGIT1) { onBuildMode.run();       return; }
         if (code == KeyCode.DIGIT2) { onRemoveMode.run();      return; }
 
-        // R and movement only when no panel is blocking
-        if (anyPanelOpen) return;
-        if (code == KeyCode.R) { onCycleFacing.run(); return; }
-        activeKeys.add(code);
+        // R rotates — allowed only when inventory is open
+        if (code == KeyCode.R) {
+            if (inventoryOpen && !shopOpen) onCycleFacing.run();
+            return;
+        }
+
+        // Movement keys — only when no panel is open at all
+        if (!shopOpen && !inventoryOpen) activeKeys.add(code);
     }
 
     private void handleKeyReleased(KeyEvent event) {
