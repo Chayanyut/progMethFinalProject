@@ -39,7 +39,7 @@ public class GameController implements Initializable {
     // ==========================================
     // Core Systems
     // ==========================================
-    private final GridSystem    logicGrid = new GridSystem(20, 20);
+    private final GridSystem    logicGrid = new GridSystem(40, 40);
     private final PlayerBank    bank      = new PlayerBank(500.0);
     private final GameRenderer  renderer  = new GameRenderer();
     private final CameraManager camera    = new CameraManager();
@@ -160,8 +160,8 @@ public class GameController implements Initializable {
             camera.pan(dx, dy);
         }
 
-        double worldW = logicGrid.getWidth()  * TILE_SIZE;
-        double worldH = logicGrid.getHeight() * TILE_SIZE;
+        double worldW = GameConstants.WORLD_WIDTH;
+        double worldH = GameConstants.WORLD_HEIGHT;
         camera.applyTransformsAndClamp(gameCanvas, worldW, worldH);
 
         renderer.render(
