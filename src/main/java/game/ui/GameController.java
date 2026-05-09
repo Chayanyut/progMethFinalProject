@@ -1,6 +1,8 @@
 package game.ui;
 
 import game.logic.*;
+import game.ui.sound.SoundEffect;
+import game.ui.sound.SoundManager;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -41,6 +43,7 @@ public class GameController implements Initializable {
     private final PlayerBank    bank      = new PlayerBank(500.0);
     private final GameRenderer  renderer  = new GameRenderer();
     private final CameraManager camera    = new CameraManager();
+    private final SoundManager sound     = new SoundManager();
 
     // ==========================================
     // Managers
@@ -51,16 +54,23 @@ public class GameController implements Initializable {
     private PlacementManager placementManager;
 
     // ==========================================
+    // Deposit sound — balance-diff approach
+    // ==========================================
+    private double previousBalance;
+
+    // ==========================================
     // Initialization
     // ==========================================
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        previousBalance = bank.getBalance();
         initShop();
         initPlacement();
         initInput();
         initGameLoop();
         bindCanvas();
         bindSceneLifecycle();
+        sound.playMusic();
     }
 
     // ==========================================
@@ -89,7 +99,9 @@ public class GameController implements Initializable {
                 shopManager::consumeFromInventory,
                 shopManager::returnToInventory,
                 shopManager::refreshUI,
-                text -> { if (shopHintLabel != null) shopHintLabel.setText(text); }
+                text -> { if (shopHintLabel != null) shopHintLabel.setText(text); },
+                () -> sound.playSfx(SoundEffect.PLACE),
+                () -> sound.playSfx(SoundEffect.REMOVE)
         );
     }
 
@@ -123,10 +135,12 @@ public class GameController implements Initializable {
             if (oldScene != null) {
                 inputHandler.detach(oldScene);
                 gameLoopManager.stop();
+                sound.stopMusic();
             }
             if (newScene != null) {
                 inputHandler.attach(newScene);
                 gameLoopManager.start();
+                sound.playMusic();
             }
         });
     }
@@ -155,14 +169,21 @@ public class GameController implements Initializable {
                 placementManager.getMouseWorldX(),
                 placementManager.getMouseWorldY(),
                 placementManager.getPlacementFacing(),
-                shopPopup.isVisible(),          // shopVisible
-                inventoryBar.isVisible(),        // inventoryVisible  ← NEW
-                placementManager.getPlacementMode() // placementMode  ← NEW
+                shopPopup.isVisible(),
+                inventoryBar.isVisible(),
+                placementManager.getPlacementMode()
         );
     }
 
     private void onLogicTick() {
         logicGrid.tick();
+
+        double newBalance = bank.getBalance();
+        if (newBalance > previousBalance) {
+            Platform.runLater(() -> sound.playSfx(SoundEffect.DEPOSIT));
+        }
+        previousBalance = newBalance;
+
         Platform.runLater(shopManager::refreshUI);
     }
 
@@ -205,7 +226,6 @@ public class GameController implements Initializable {
     private void updateModeButtons(PlacementMode mode) {
         if (buildModeButton  != null) buildModeButton.getStyleClass().removeAll("mode-btn-active");
         if (removeModeButton != null) removeModeButton.getStyleClass().removeAll("mode-btn-active");
-
         if (mode == PlacementMode.BUILD  && buildModeButton  != null) buildModeButton.getStyleClass().add("mode-btn-active");
         if (mode == PlacementMode.REMOVE && removeModeButton != null) removeModeButton.getStyleClass().add("mode-btn-active");
     }

@@ -18,8 +18,8 @@ public class PlacementManager {
     // ==========================================
     // Placement State
     // ==========================================
-    private Direction    placementFacing = Direction.RIGHT;
-    private PlacementMode placementMode  = PlacementMode.BUILD;
+    private Direction     placementFacing = Direction.RIGHT;
+    private PlacementMode placementMode   = PlacementMode.BUILD;
     private double mouseWorldX;
     private double mouseWorldY;
 
@@ -30,7 +30,7 @@ public class PlacementManager {
     private final PlayerBank bank;
 
     // ==========================================
-    // Callbacks into ShopManager / UI
+    // Callbacks
     // ==========================================
     private final BooleanSupplier                isShopVisible;
     private final Supplier<MachineType>          getActiveSelection;
@@ -39,6 +39,8 @@ public class PlacementManager {
     private final Consumer<MachineType>          returnToInventory;
     private final Runnable                       refreshUI;
     private final Consumer<String>               onHintText;
+    private final Runnable                       onPlaceSound;
+    private final Runnable                       onRemoveSound;
 
     // ==========================================
     // Constructor
@@ -51,7 +53,9 @@ public class PlacementManager {
                             Consumer<MachineType> consumeFromInventory,
                             Consumer<MachineType> returnToInventory,
                             Runnable refreshUI,
-                            Consumer<String> onHintText) {
+                            Consumer<String> onHintText,
+                            Runnable onPlaceSound,
+                            Runnable onRemoveSound) {
         this.logicGrid            = logicGrid;
         this.bank                 = bank;
         this.isShopVisible        = isShopVisible;
@@ -61,6 +65,8 @@ public class PlacementManager {
         this.returnToInventory    = returnToInventory;
         this.refreshUI            = refreshUI;
         this.onHintText           = onHintText;
+        this.onPlaceSound         = onPlaceSound;
+        this.onRemoveSound        = onRemoveSound;
     }
 
     // ==========================================
@@ -149,6 +155,7 @@ public class PlacementManager {
         Machine toPlace = createMachine(selection);
         if (logicGrid.placeMachine(gx, gy, toPlace)) {
             consumeFromInventory.accept(selection);
+            if (onPlaceSound != null) onPlaceSound.run();
         }
     }
 
@@ -158,10 +165,8 @@ public class PlacementManager {
 
         MachineType type = existing.getType();
         if (logicGrid.removeMachine(gx, gy)) {
-            // Return machine to inventory (item it was holding is discarded)
-            if (type != MachineType.NONE) {
-                returnToInventory.accept(type);
-            }
+            if (type != MachineType.NONE) returnToInventory.accept(type);
+            if (onRemoveSound != null) onRemoveSound.run();
             refreshUI.run();
         }
     }
